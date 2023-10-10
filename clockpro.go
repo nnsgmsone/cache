@@ -72,6 +72,10 @@ func (h Handle) Release() {
 	h.value.release()
 }
 
+func (h Handle) Truncate(n int) {
+	h.value.Truncate(n)
+}
+
 type shard struct {
 	hits   atomic.Int64
 	misses atomic.Int64
