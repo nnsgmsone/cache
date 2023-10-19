@@ -27,8 +27,9 @@ func (v *Value) Buf() []byte {
 // changed once the value has been added to the cache as there may be
 // concurrent readers of the Value. Instead, a new Value should be created and
 // added to the cache to replace the existing value.
-func (v *Value) Truncate(n int) {
+func (v *Value) Truncate(n int) *Value {
 	v.buf = v.buf[:n]
+	return v
 }
 
 func (v *Value) refs() int32 {
