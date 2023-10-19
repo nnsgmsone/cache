@@ -72,8 +72,9 @@ func (h Handle) Release() {
 	h.value.release()
 }
 
-func (h Handle) Truncate(n int) {
+func (h Handle) Truncate(n int) Handle {
 	h.value.Truncate(n)
+	return h
 }
 
 type shard struct {
