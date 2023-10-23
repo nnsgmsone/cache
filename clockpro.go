@@ -30,6 +30,12 @@ import (
 	"github.com/nnsgmsone/cache/internal/invariants"
 )
 
+type CacheData interface {
+	Release()
+	Get() []byte
+	Truncate(int) CacheData
+}
+
 type fileKey struct {
 	id string
 }
@@ -72,7 +78,7 @@ func (h Handle) Release() {
 	h.value.release()
 }
 
-func (h Handle) Truncate(n int) Handle {
+func (h Handle) Truncate(n int) CacheData {
 	h.value.Truncate(n)
 	return h
 }
