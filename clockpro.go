@@ -854,6 +854,23 @@ func Free(v *Value) {
 	v.release()
 }
 
+func (c *Cache) Alloc(n int) CacheData {
+	return Handle{value: Alloc(n)}
+}
+
+func (c *Cache) AllocWithKey(id string, offset uint64, n int) CacheData {
+	return c.getShard(id, offset).Alloc(n)
+}
+
+func (c *shard) Alloc(n int) CacheData {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	for c.targetSize() <= c.sizeHot+c.sizeCold+int64(n) && c.handCold != nil {
+		c.runHandCold(c.countCold, c.sizeCold)
+	}
+	return Handle{value: Alloc(n)}
+}
+
 // Reserve N bytes in the cache. This effectively shrinks the size of the cache
 // by N bytes, without actually consuming any memory. The returned closure
 // should be invoked to release the reservation.
